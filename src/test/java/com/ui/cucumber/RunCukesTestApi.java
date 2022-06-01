@@ -9,6 +9,6 @@ import io.cucumber.testng.AbstractTestNGCucumberTests;
  */
 
 
-@CucumberOptions(tags = "@sanity")
-public class RunCukesTestSanity extends AbstractTestNGCucumberTests {
+@CucumberOptions(tags = "@api")
+public class RunCukesTestApi extends AbstractTestNGCucumberTests {
 }

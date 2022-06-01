@@ -21,6 +21,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.safari.SafariDriver;
+import org.testng.Reporter;
+import org.testng.annotations.Parameters;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,21 +51,12 @@ public class Browser {
 
     @Before
     public void setUp(){
-        FileInputStream f = null;
-        try{
-            f = new FileInputStream(new File("src/test/Resources/com/ui/cucumber/Config.properties"));
-        }catch(FileNotFoundException e){
-            e.printStackTrace();
-        }
 
-        prop = new Properties();
-        try{
-            prop.load(f);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        String browser = prop.getProperty("browser");
-        switch (browser){
+        loadProperties();
+
+        String env = Reporter.getCurrentTestResult().getTestContext().getCurrentXmlTest().getParameter("env");
+
+        switch (env){
             case "chrome" :
                 System.out.println("Chromedriver path " + prop.getProperty("driverExecutable") + "/chromedriver");
                 System.setProperty("webdriver.chrome.driver",prop.getProperty("driverExecutable") + "/chromedriver");
@@ -77,6 +70,9 @@ public class Browser {
 
             case "safari" :
                 driver = new SafariDriver();
+                break;
+
+            default:
                 break;
 
         }
@@ -139,10 +135,12 @@ public class Browser {
                 getResultQueryParams(testResult),
                 testRunId,
                 getArrayBody(String.valueOf(contentId)));
-        driver.quit();
+        if(driver != null) driver.quit();
+
     }
 
     public String getApiPath(String url, String path){
+        loadProperties();
         base_url = prop.getProperty(url + "_BASE_URL");
         return base_url + path;
     }
@@ -152,6 +150,12 @@ public class Browser {
         headers.put("accept", "application/json");
         headers.put("Content-Type", "application/json");
         headers.put("reqtest-pat", Constants.REQTEST_PAT);
+        return headers;
+    }
+
+    public Map<String, ?> getReqresHeaders(){
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
         return headers;
     }
 
@@ -170,6 +174,21 @@ public class Browser {
         Map<String, String> qParams = new HashMap<>();
         qParams.put("result", result);
         return qParams;
+    }
+
+    private void loadProperties() {
+        FileInputStream f = null;
+        try{
+            f = new FileInputStream(new File("src/test/Resources/com/ui/cucumber/Config.properties"));
+        }catch(FileNotFoundException e){
+            e.printStackTrace();
+        }
+        prop = new Properties();
+        try{
+            prop.load(f);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
 

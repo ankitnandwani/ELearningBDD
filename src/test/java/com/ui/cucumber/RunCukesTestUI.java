@@ -9,6 +9,6 @@ import io.cucumber.testng.CucumberOptions;
  */
 
 
-@CucumberOptions(tags = "@regression")
-public class RunCukesTestRegression extends AbstractTestNGCucumberTests {
+@CucumberOptions(tags = "@ui")
+public class RunCukesTestUI extends AbstractTestNGCucumberTests {
 }

@@ -1,5 +1,5 @@
-# ReqTestUIBDD
-BDD UI Framework integration with ReqTest
+# Elucidat Learning BDD
+BDD UI Framework showing demo test cases for Elucidat Learning
 
 
 # Run
